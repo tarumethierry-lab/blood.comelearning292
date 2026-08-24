@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nexus AI Studio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0d1117;
+      color: #c9d1d9;
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* Sidebar Controls */
+    .sidebar {
+      width: 280px;
+      background: #161b22;
+      border-right: 1px solid #30363d;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .brand { font-size: 1.2rem; font-weight: 700; color: #58a6ff; display: flex; align-items: center; gap: 8px; }
+    .control-group { display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 0.85rem; color: #8b949e; text-transform: uppercase; font-weight: 600; }
+    select, button {
+      background: #21262d;
+      color: #c9d1d9;
+      border: 1px solid #30363d;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    select:focus, button:focus { outline: 1px solid #58a6ff; }
+    .btn-run { background: #238636; color: #fff; border: none; font-weight: 600; }
+    .btn-run:hover { background: #2ea043; }
+
+    /* Main Chat Area */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .chat-box {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .message {
+      max-width: 80%;
+      padding: 14px 18px;
+      border-radius: 12px;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+    .user-msg {
+      align-self: flex-end;
+      background: #1f6feb;
+      color: #ffffff;
+      border-bottom-right-radius: 2px;
+    }
+    .ai-msg {
+      align-self: flex-start;
+      background: #161b22;
+      border: 1px solid #30363d;
+      border-bottom-left-radius: 2px;
+    }
+    .code-block {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 6px;
+      padding: 12px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: #7ee787;
+      margin-top: 8px;
+      white-space: pre-wrap;
+    }
+
+    /* Input Dock */
+    .input-dock {
+      padding: 16px 24px;
+      background: #161b22;
+      border-top: 1px solid #30363d;
+      display: flex;
+      gap: 12px;
+    }
+    textarea {
+      flex: 1;
+      background: #0d1117;
+      border: 1px solid #30363d;
+      color: #c9d1d9;
+      border-radius: 6px;
+      padding: 12px;
+      resize: none;
+      height: 50px;
+      font-family: inherit;
+    }
+    textarea:focus { outline: 1px solid #58a6ff; }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">⚡ Nexus AI Core</div>
+    
+    <div class="control-group">
+      <label for="backend-select">Target Backend Engine</label>
+      <select id="backend-select">
+        <option value="js">JavaScript (In-Browser)</option>
+        <option value="python">Python (Flask Server)</option>
+        <option value="java">Java (Spring Boot Server)</option>
+      </select>
+    </div>
+
+    <div class="control-group">
+      <label>Quick Actions</label>
+      <button onclick="insertSampleCode('python')">Generate Python Code</button>
+      <button onclick="insertSampleCode('java')">Generate Java Code</button>
+    </div>
+  </aside>
+
+  <!-- Main Interface -->
+  <main class="main-content">
+    <div class="chat-box" id="chat-box">
+      <div class="message ai-msg">
+        Hello! I am your AI Developer Assistant. Select a backend engine from the sidebar and send a prompt to generate or execute code.
+      </div>
+    </div>
+
+    <div class="input-dock">
+      <textarea id="user-input" placeholder="Ask AI to write code or analyze a prompt..."></textarea>
+      <button class="btn-run" onclick="handleSend()">Send Prompt</button>
+    </div>
+  </main>
+
+  <!-- JavaScript Handler -->
+  <script>
+    async function handleSend() {
+      const inputField = document.getElementById('user-input');
+      const chatBox = document.getElementById('chat-box');
+      const backend = document.getElementById('backend-select').value;
+      const prompt = inputField.value.trim();
+
+      if (!prompt) return;
+
+      // 1. Render User Message
+      appendMessage(prompt, 'user-msg');
+      inputField.value = '';
+
+      // 2. Process based on selected engine
+      if (backend === 'js') {
+        simulateInBrowserAI(prompt);
+      } else if (backend === 'python') {
+        await sendToBackend('http://localhost:5000/api/ai', prompt, 'Python');
+      } else if (backend === 'java') {
+        await sendToBackend('http://localhost:8080/api/ai', prompt, 'Java');
+      }
+    }
+
+    function appendMessage(text, className, codeSnippet = null) {
+      const chatBox = document.getElementById('chat-box');
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `message ${className}`;
+      msgDiv.textContent = text;
+
+      if (codeSnippet) {
+        const codeDiv = document.createElement('div');
+        codeDiv.className = 'code-block';
+        codeDiv.textContent = codeSnippet;
+        msgDiv.appendChild(codeDiv);
+      }
+
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    // Client-side execution (JavaScript Engine)
+    function simulateInBrowserAI(prompt) {
+      setTimeout(() => {
+        const response = `[JS Client Response]: Processed prompt "${prompt}".`;
+        const generatedCode = `// Auto-generated JavaScript Snippet\nfunction processData() {\n  console.log("Analyzing: ${prompt}");\n}\nprocessData();`;
+        appendMessage(response, 'ai-msg', generatedCode);
+      }, 600);
+    }
+
+    // Call Python or Java HTTP endpoints
+    async function sendToBackend(url, prompt, envName) {
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt: prompt })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+        const data = await response.json();
+        appendMessage(`[${envName} Backend Response]: ${data.message}`, 'ai-msg', data.code);
+      } catch (err) {
+        appendMessage(`Failed to connect to ${envName} backend server at ${url}. Ensure the server is running.`, 'ai-msg');
+      }
+    }
+
+    function insertSampleCode(lang) {
+      const inputField = document.getElementById('user-input');
+      inputField.value = `Write a hello world program in ${lang}`;
+    }
+  </script>
+</body>
+</html>
