@@ -1,270 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Self-Learning AI Agent</title>
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #0f172a;
-      color: #f8fafc;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      padding: 20px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Login Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-    .container {
-      width: 100%;
-      max-width: 800px;
-      height: 90vh;
-      background: #1e293b;
-      border-radius: 16px;
-      border: 1px solid #334155;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
 
-    .header {
-      padding: 16px 24px;
-      background: #0f172a;
-      border-bottom: 1px solid #334155;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .login-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
 
-    .header h2 { font-size: 1.1rem; color: #38bdf8; }
-    .memory-stats { font-size: 0.85rem; color: #94a3b8; }
+        .login-card h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            text-align: center;
+        }
 
-    .chat-box {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+        .login-card p {
+            font-size: 14px;
+            color: #e0e0e0;
+            text-align: center;
+            margin-bottom: 24px;
+        }
 
-    .msg {
-      max-width: 80%;
-      padding: 12px 16px;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      line-height: 1.4;
-    }
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
 
-    .user-msg {
-      align-self: flex-end;
-      background: #2563eb;
-      color: #ffffff;
-      border-bottom-right-radius: 2px;
-    }
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
 
-    .ai-msg {
-      align-self: flex-start;
-      background: #334155;
-      color: #f1f5f9;
-      border-bottom-left-radius: 2px;
-    }
+        .input-wrapper {
+            position: relative;
+        }
 
-    .controls {
-      padding: 16px;
-      background: #0f172a;
-      border-top: 1px solid #334155;
-      display: flex;
-      gap: 10px;
-    }
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
 
-    input[type="text"] {
-      flex: 1;
-      padding: 12px;
-      background: #1e293b;
-      border: 1px solid #475569;
-      border-radius: 8px;
-      color: #fff;
-      outline: none;
-    }
+        .input-group input::placeholder {
+            color: #ddd;
+        }
 
-    input[type="text"]:focus { border-color: #38bdf8; }
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+        }
 
-    button {
-      padding: 12px 20px;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 12px;
+            user-select: none;
+            opacity: 0.8;
+        }
 
-    .btn-send { background: #38bdf8; color: #0f172a; }
-    .btn-send:hover { background: #7dd3fc; }
-    .btn-reset { background: #ef4444; color: #fff; }
-    .btn-reset:hover { background: #f87171; }
-  </style>
+        .toggle-password:hover {
+            opacity: 1;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 24px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .forgot-link {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.9;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #764ba2;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .footer-text a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    <div class="header">
-      <h2>Brain-State AI Engine</h2>
-      <div class="memory-stats" id="stats">Learned Words: 0</div>
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p>Please enter your credentials to log in.</p>
+
+        <form  action="index.html">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <span class="toggle-password" id="togglePassword">Show</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    Remember me
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign In</button>
+            <div id="statusMessage" class="message"></div>
+        </form>
+
+        <div class="footer-text">
+            Don't have an account? <a href="#">Sign up</a>
+        </div>
     </div>
 
-    <div class="chat-box" id="chat-box">
-      <div class="msg ai-msg">
-        Hello! I am a learning AI. I save everything you teach me to local storage. Type sentences to help me learn vocabulary and grammar patterns!
-      </div>
-    </div>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const loginForm = document.getElementById('loginForm');
+        const statusMessage = document.getElementById('statusMessage');
 
-    <div class="controls">
-      <input type="text" id="user-input" placeholder="Type a sentence to teach the AI..." onkeydown="if(event.key==='Enter') handleSend()">
-      <button class="btn-send" onclick="handleSend()">Teach / Chat</button>
-      <button class="btn-reset" onclick="clearMemory()">Reset Memory</button>
-    </div>
-  </div>
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePassword.textContent = isPassword ? 'Hide' : 'Show';
+        });
 
-  <script>
-    // --- MEMORY ENGINE (Markov Chain Network) ---
-    class MemoryAI {
-      constructor() {
-        this.brain = this.loadMemory();
-      }
+        // Form submission handler
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = passwordInput.value;
 
-      // Load brain state from LocalStorage
-      loadMemory() {
-        const saved = localStorage.getItem('ai_brain_memory');
-        if (saved) {
-          return JSON.parse(saved);
-        }
-        // Default seed data
-        return {
-          "__START__": ["hello", "welcome"],
-          "hello": ["world", "friend"],
-          "welcome": ["to", "my"],
-          "to": ["the", "learning"],
-          "learning": ["system"],
-          "system": ["__END__"]
-        };
-      }
+            // Simple demonstration validation
+            if (email && password) {
+                statusMessage.style.color = '#7dffb3';
+                statusMessage.textContent = 'Logging in successfully...';
+                statusMessage.style.display = 'block';
 
-      // Save brain state to LocalStorage
-      saveMemory() {
-        localStorage.setItem('ai_brain_memory', JSON.stringify(this.brain));
-        updateStats();
-      }
-
-      // Learn new sentence structure
-      learn(text) {
-        const words = text.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/).filter(w => w.length > 0);
-        if (words.length === 0) return;
-
-        // Connect START marker to first word
-        this.addAssociation("__START__", words[0]);
-
-        // Connect consecutive word pairs
-        for (let i = 0; i < words.length - 1; i++) {
-          this.addAssociation(words[i], words[i + 1]);
-        }
-
-        // Connect last word to END marker
-        this.addAssociation(words[words.length - 1], "__END__");
-
-        this.saveMemory();
-      }
-
-      addAssociation(word1, word2) {
-        if (!this.brain[word1]) {
-          this.brain[word1] = [];
-        }
-        this.brain[word1].push(word2);
-      }
-
-      // Generate a response based on learned word connections
-      respond(promptText) {
-        // Learn from user input first
-        this.learn(promptText);
-
-        const inputWords = promptText.toLowerCase().replace(/[^\w\s]/g, '').split(/\s+/);
-        
-        // Find a starting word that matches user input, or fallback to __START__
-        let currentWord = inputWords.find(w => this.brain[w]) || "__START__";
-        let response = [];
-
-        if (currentWord !== "__START__") {
-          response.push(currentWord);
-        }
-
-        // Walk through the learned network (max 20 words per response)
-        for (let i = 0; i < 20; i++) {
-          const nextOptions = this.brain[currentWord];
-          if (!nextOptions || nextOptions.length === 0) break;
-
-          // Select a random associated next word
-          const nextWord = nextOptions[Math.floor(Math.random() * nextOptions.length)];
-          
-          if (nextWord === "__END__") break;
-          
-          response.push(nextWord);
-          currentWord = nextWord;
-        }
-
-        return response.length > 0 ? response.join(' ') + '.' : "I learned that!";
-      }
-
-      // Reset local memory
-      reset() {
-        localStorage.removeItem('ai_brain_memory');
-        this.brain = this.loadMemory();
-        updateStats();
-      }
-    }
-
-    // --- UI CONTROLLER ---
-    const ai = new MemoryAI();
-
-    function updateStats() {
-      const totalWords = Object.keys(ai.brain).length;
-      document.getElementById('stats').textContent = `Learned Words: ${totalWords}`;
-    }
-
-    function handleSend() {
-      const input = document.getElementById('user-input');
-      const text = input.value.trim();
-      if (!text) return;
-
-      appendMsg(text, 'user-msg');
-      input.value = '';
-
-      setTimeout(() => {
-        const reply = ai.respond(text);
-        appendMsg(reply, 'ai-msg');
-      }, 300);
-    }
-
-    function appendMsg(text, className) {
-      const chatBox = document.getElementById('chat-box');
-      const div = document.createElement('div');
-      div.className = `msg ${className}`;
-      div.textContent = text;
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function clearMemory() {
-      if (confirm("Are you sure you want to erase the AI's learned memory?")) {
-        ai.reset();
-        appendMsg("[System]: Memory erased. Starting clean.", 'ai-msg');
-      }
-    }
-
-    // Initialize display count
-    updateStats();
-  </script>
+                // Simulate authentication delay
+                setTimeout(() => {
+                    alert('Login process triggered for: ' + email);
+                }, 800);
+            }
+        });
+    </script>
 </body>
 </html>
