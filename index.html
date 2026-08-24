@@ -3,134 +3,241 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thierry AI
-    </title>
-    <!-- Math.js Library for Parsing & Calculations -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/12.4.1/math.js"></script>
-    <!-- MathJax Library for Mathematical Rendering -->
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Modern Login Page</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f6f9;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
-        .solver-card {
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
             width: 100%;
-            max-width: 500px;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: #ffffff;
         }
-        h2 {
-            margin-top: 0;
-            color: #333;
+
+        .login-card h2 {
+            font-size: 28px;
+            margin-bottom: 8px;
             text-align: center;
         }
+
+        .login-card p {
+            font-size: 14px;
+            color: #e0e0e0;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
         .input-group {
-            display: flex;
-            gap: 10px;
             margin-bottom: 20px;
+            position: relative;
         }
-        input[type="text"] {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 16px;
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
         }
-        button {
-            padding: 12px 20px;
-            background-color: #007bff;
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.2);
             color: #fff;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input::placeholder {
+            color: #ddd;
+        }
+
+        .input-group input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: #ffffff;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 12px;
+            user-select: none;
+            opacity: 0.8;
+        }
+
+        .toggle-password:hover {
+            opacity: 1;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            margin-bottom: 24px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        .forgot-link {
+            color: #fff;
+            text-decoration: none;
+            opacity: 0.9;
         }
-        .output-box {
-            background: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 6px;
-            padding: 15px;
-            min-height: 50px;
-            word-wrap: break-word;
+
+        .forgot-link:hover {
+            text-decoration: underline;
         }
-        .examples {
+
+        .btn-submit {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #764ba2;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        .btn-submit:active {
+            transform: translateY(0);
+        }
+
+        .footer-text {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .footer-text a {
+            color: #fff;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .footer-text a:hover {
+            text-decoration: underline;
+        }
+
+        .message {
             margin-top: 15px;
             font-size: 13px;
-            color: #6c757d;
+            text-align: center;
+            display: none;
         }
     </style>
 </head>
 <body>
 
-<div class="solver-card">
-    <h2>Thierry AI Math Problem Solver</h2>
-    
-    <div class="input-group">
-        <input type="text" id="mathInput" placeholder="Enter problem (e.g. 5cm + 2inch or derivative('x^2', 'x'))">
-        <button onclick="solveProblem()">Solve</button>
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <p>Please enter your credentials to log in.</p>
+
+        <form  action="index.html">
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" placeholder="name@example.com" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" required>
+                    <span class="toggle-password" id="togglePassword">Show</span>
+                </div>
+            </div>
+
+            <div class="actions">
+                <label class="remember-me">
+                    <input type="checkbox" id="remember">
+                    Remember me
+                </label>
+                <a href="#" class="forgot-link">Forgot password?</a>
+            </div>
+
+            <button type="submit" class="btn-submit">Sign In</button>
+            <div id="statusMessage" class="message"></div>
+        </form>
+
+        <div class="footer-text">
+            Don't have an account? <a href="#">Sign up</a>
+        </div>
     </div>
 
-    <div class="output-box" id="output">Result will appear here...</div>
+    <script>
+        const passwordInput = document.getElementById('password');
+        const togglePassword = document.getElementById('togglePassword');
+        const loginForm = document.getElementById('loginForm');
+        const statusMessage = document.getElementById('statusMessage');
 
-    <div class="examples">
-        <strong>Supported Examples:</strong>
-        <ul>
-            <li><code>1.2 / (3.3 + 1.7)</code></li>
-            <li><code>derivative('x^2 + 3x', 'x')</code></li>
-            <li><code>5.08 cm + 2 inch</code></li>
-            <li><code>det([[1, 2], [3, 4]])</code></li>
-            <li><code>simplify('2x + 3x - a')</code></li>
-        </ul>
-    </div>
-</div>
+        // Toggle password visibility
+        togglePassword.addEventListener('click', () => {
+            const isPassword = passwordInput.type === 'password';
+            passwordInput.type = isPassword ? 'text' : 'password';
+            togglePassword.textContent = isPassword ? 'Hide' : 'Show';
+        });
 
-<script>
-    function solveProblem() {
-        const input = document.getElementById('mathInput').value;
-        const outputDiv = document.getElementById('output');
-
-        if (!input.trim()) {
-            outputDiv.innerHTML = "<span style='color:red;'>Please enter a mathematical expression.</span>";
-            return;
-        }
-
-        try {
-            // Evaluate the mathematical expression using Math.js
-            const result = math.evaluate(input);
+        // Form submission handler
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
             
-            // Format output for HTML display
-            let formattedResult = math.format(result, { precision: 14 });
-            
-            // Render result cleanly
-            outputDiv.innerHTML = `<strong>Result:</strong> ${formattedResult}`;
+            const email = document.getElementById('email').value;
+            const password = passwordInput.value;
 
-            // Re-render math typesetting if LaTeX output is returned
-            if (window.MathJax) {
-                MathJax.typesetPromise([outputDiv]);
+            // Simple demonstration validation
+            if (email && password) {
+                statusMessage.style.color = '#7dffb3';
+                statusMessage.textContent = 'Logging in successfully...';
+                statusMessage.style.display = 'block';
+
+                // Simulate authentication delay
+                setTimeout(() => {
+                    alert('Login process triggered for: ' + email);
+                }, 800);
             }
-        } catch (error) {
-            outputDiv.innerHTML = `<span style='color:red;'><strong>Error:</strong> ${error.message}</span>`;
-        }
-    }
-
-    // Allow pressing "Enter" key to trigger solving
-    document.getElementById("mathInput").addEventListener("keyup", function(event) {
-        if (event.key === "Enter") {
-            solveProblem();
-        }
-    });
-</script>
-created by Thierry Tarume
+        });
+    </script>
 </body>
 </html>
